@@ -1,5 +1,5 @@
 /**
- * Class representing the graphic user interface (GUI) for the SubSync program.
+ * Class representing the graphic user interface (GUI) for the SyncSub program.
  *
  * @author Matt Mokary ( mxm6060@rit.edu )
  */
@@ -68,8 +68,8 @@ class SyncSubGUI implements ActionListener {
     /**
      * Constructor. Builds and displays the GUI.
      */
-    public SubSyncGUI() {
-        JFrame f = new JFrame( "SubSync " + version );
+    public SyncSubGUI() {
+        JFrame f = new JFrame( "SyncSub " + version );
         f.setSize( 300, 170 );
         f.setLayout( new BorderLayout() );
 
