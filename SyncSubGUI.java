@@ -5,6 +5,7 @@
  */
 
 import java.io.*;
+import java.util.Arrays;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -16,6 +17,11 @@ class SyncSubGUI implements ActionListener {
      * Version number
      */
     private final String version = "v1.0.0";
+
+    /**
+     * The currently opened file;
+     */
+    private File f;
 
     /**
      * The "open" button.
@@ -33,6 +39,16 @@ class SyncSubGUI implements ActionListener {
     private JLabel fileLabel;
 
     /**
+     * Label for displaying errors.
+     */
+    private JLabel errorLabel;
+
+    /**
+     * Label for displaying operation status.
+     */
+    private JLabel statusLabel;
+
+    /**
      * Combo box for choosing direction of time change ( plus or minus ).
      */
     private JComboBox pmComboBox;
@@ -40,22 +56,22 @@ class SyncSubGUI implements ActionListener {
     /**
      * Two-character text field for entering the number of hours.
      */
-    private JTextField hours;
+    private JTextField h;
 
     /**
-     * Two-character text field for entering the number of minutes.
+     * Two-character text field for entering the number of minutes
      */
-    private JTextField minutes;
+    private JTextField m;
 
     /**
-     * Two-character text field for entering the number of seconds.
+     * Two-character text field for entering the number of seconds
      */
-    private JTextField seconds;
+    private JTextField s;
 
     /**
      * Two-character text field for entering the number of milliseconds.
      */
-    private JTextField mseconds;
+    private JTextField ms;
 
     /**
      * Boolean for checking whether time change is positive or negative (plus
@@ -99,10 +115,26 @@ class SyncSubGUI implements ActionListener {
 
     private JPanel buildBottomComponents() {
         JPanel p = new JPanel();
-        p.setLayout( new FlowLayout( FlowLayout.CENTER ) );
+        p.setLayout( new GridLayout( 3, 1 ) );
+        
+        // Three subpanels so that labels stack vertically and are centered.
+        JPanel p1 = new JPanel();
+        p1.setLayout( new FlowLayout( FlowLayout.CENTER ) );
+        errorLabel = new JLabel();
+        p1.add( errorLabel );
+        p.add( p1 );
 
+        JPanel p2 = new JPanel();
+        p2.setLayout( new FlowLayout( FlowLayout.CENTER ) );
+        statusLabel = new JLabel();
+        p2.add( statusLabel );
+        p.add( p2 );
+
+        JPanel p3 = new JPanel();
+        p3.setLayout( new FlowLayout( FlowLayout.CENTER ) );
         fileLabel = new JLabel();
-        p.add( fileLabel );
+        p3.add( fileLabel );
+        p.add( p3 );
 
         return p;
     }
@@ -119,37 +151,76 @@ class SyncSubGUI implements ActionListener {
 
         p.add( new JLabel( "    " ) ); // spacer
 
-        hours = new JTextField( 2 );
-        p.add( hours );
+        h = new JTextField( "hh", 2 );
+        p.add( h );
         p.add( new JLabel( " : " ) );
-        minutes = new JTextField( 2 );
-        p.add( minutes );
+        m = new JTextField( "mm", 2 );
+        p.add( m );
         p.add( new JLabel( " : " ) );
-        seconds = new JTextField( 2 );
-        p.add( seconds );
+        s = new JTextField( "ss", 2 );
+        p.add( s );
         p.add( new JLabel( " , " ) );
-        mseconds = new JTextField( 3 );
-        p.add( mseconds );
+        ms = new JTextField( "---", 3 );
+        p.add( ms );
 
         return p;
     }
 
     public void actionPerformed( ActionEvent e ) {
+        statusLabel.setText( "" );
+        errorLabel.setText( "" );
         if ( e.getSource() == openButton ) {
-            JFileChooser fc = new JFileChooser();
-            int returnVal = fc.showOpenDialog( null );
-            if ( returnVal == JFileChooser.APPROVE_OPTION ) {
-                File f = fc.getSelectedFile();
-                fileLabel.setText( f.getName() );
-                syncButton.setEnabled( true );
-            }
+            openBtnPressed();
         } else if ( e.getSource() == syncButton ) {
-            System.out.println( "Syncing" );
+            syncBtnPressed();
         } else if ( e.getSource() == pmComboBox ) {
-            JComboBox jc = (JComboBox)e.getSource();
-            plusOrMinus = ( jc.getSelectedIndex() == 0 )
-            ? true : false;
+            pmComBoxChanged( (JComboBox)e.getSource() );
         }
     }
 
+    private void syncBtnPressed() {
+        String[] t = { h.getText(), m.getText(), s.getText(), ms.getText() };
+        for ( String e : t ) {
+            if ( ! isInteger( e ) ) {
+                displayError( "Invalid time increment: " + e );
+                return;
+            }
+        }
+        if ( ! f.getName().contains( ".srt" ) ) {
+            displayError( "Not a valid file (not .srt): " + f.getName() );
+            return;
+        }
+        SyncSubLib.update( f, plusOrMinus, Integer.parseInt(t[0]),
+                           Integer.parseInt(t[1]), Integer.parseInt(t[2]),
+                           Integer.parseInt(t[3]) );
+        statusLabel.setText( SyncSubLib.getNumUpdates() + " start/end times" + 
+            "  updated." );
+    }
+
+    private void openBtnPressed() {
+        JFileChooser fc = new JFileChooser();
+        int returnVal = fc.showOpenDialog( null );
+        if ( returnVal == JFileChooser.APPROVE_OPTION ) {
+            f = fc.getSelectedFile();
+            fileLabel.setText( f.getName() );
+            syncButton.setEnabled( true );
+        }
+    }
+
+    private void pmComBoxChanged( JComboBox jc ) {
+        plusOrMinus = ( jc.getSelectedIndex() == 0 ) ? true : false;
+    }
+
+    private boolean isInteger( String s ) {
+        try {
+            Integer.parseInt( s );
+        } catch ( NumberFormatException e ) {
+            return false;
+        }
+        return true;
+    }
+
+    private void displayError( String e ) {
+        errorLabel.setText( e );
+    }
 }
