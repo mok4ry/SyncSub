@@ -2,7 +2,7 @@
  * Main source file for the SubSync program. Creates an instance of the GUI
  * object.
  *
- * @author Matt Mokary ( mxm6060@rit.edu )
+ * @author Matt Mokary (mxm6060@rit.edu)
  */
 
 class SyncSub {
