@@ -13,7 +13,7 @@ class SyncSub {
     private static SyncSubGUI g;
 
     /**
-     * Main function.
+     * Main function. Creates a GUI object, which handles the rest.
      *
      * @param args Command-line arguments.
      */
