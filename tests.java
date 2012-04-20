@@ -9,27 +9,23 @@
  */
 class tests extends SyncSubLib {
 
+    // writing my own testing function because JUnit outside of an IDE is hard 
     private static void assertTrue( boolean ex ) {
-        try { assert ex; System.out.print( "." ); }
-        catch ( AssertionError e ) { System.out.print( "X" ); }
-    }
-
-    private static void assertFalse( boolean ex ) {
-        try { assert !ex; System.out.print( "." ); }
-        catch ( AssertionError e ) { System.out.print( "X" ); }
+        if ( ex ) { System.out.print( "." ); }
+        else { System.out.print( "X" ); }
     }
 
 // ---------------------------------------------------------------------------
 
     private static void test_updateLine1() {
         String[] s = { "Some Text" };
-        assertTrue( updateLine( s ).equals( "Some Text" ) );
+        assertTrue( updateLine(s).equals( "Some Text" ) );
     }
 
     private static void test_updateLine2() {
         setData( PLUS, 0, 0, 1, 0 );
         String[] s = { "00:00:00,000", "00:00:00,000" };
-        assertTrue( updateLine(s).equals( "00:00:01,000 --> 00:00:00,000" ) );
+        assertTrue( updateLine(s).equals( "00:00:01,000 --> 00:00:01,000" ) );
     }
 
     private static void test_updateLine3() {
@@ -74,7 +70,11 @@ class tests extends SyncSubLib {
         assertTrue( updateLine(s).equals( "00:59:59,500 --> 00:59:59,500" ) );
     }
 
-
+    private static void test_updateLine10() {
+        setData( MINUS, 0, 0, 1, 0 );
+        String[] s = { "00:01:00,000", "00:00:00,000" };
+        assertTrue( updateLine(s).equals( "00:00:59,000 --> 00:00:00,000" ) );
+    }
 // ---------------------------------------------------------------------------
 
     public static void main( String[] args ) {
@@ -91,6 +91,7 @@ class tests extends SyncSubLib {
         test_updateLine7();
         test_updateLine8();
         test_updateLine9();
+        test_updateLine10();
         System.out.print("\n");
     }
 

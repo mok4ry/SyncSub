@@ -165,21 +165,21 @@ class SyncSubLib {
         int carry = 0;
 
         // do math
-        if ( MS + ms > 1000 ) {
+        if ( MS + ms > 999 ) {
             MS = MS + ms - 1000;
             carry = 1;
         } else {
             MS += ms;
             carry = 0;
         }
-        if ( S + s + carry > 60 ) {
+        if ( S + s + carry > 59 ) {
             S = S + s + carry - 60;
             carry = 1;
         } else {
             S = S + s + carry;
             carry = 0;
         }
-        if ( M + m + carry > 60 ) {
+        if ( M + m + carry > 59 ) {
             M = M + m + carry - 60;
             carry = 1;
         } else {
@@ -210,21 +210,21 @@ class SyncSubLib {
 
         // do math
         if ( MS - ms < 0 ) {
-            MS = MS - ms + 1000;
+            MS = ( S == 0 && M == 0 && H == 0 ) ? 0 : MS - ms + 1000;
             carry = 1;
         } else { 
             MS -= ms;
             carry = 0;
         }
         if ( S - s - carry < 0 ) {
-            S = S - s - carry + 60;
+            S = ( M == 0 && H == 0 ) ? 0 : S - s - carry + 60;
             carry = 1;
         } else {
-            S = S - s + carry;
+            S = S - s - carry;
             carry = 0;
         }
-        if ( M - m < 0 ) {
-            M = M - m - carry + 60;
+        if ( M - m - carry < 0 ) {
+            M = ( H == 0 ) ? 0 : M - m - carry + 60;
             carry = 1;
         } else {
             M = M - m - carry;
@@ -232,6 +232,11 @@ class SyncSubLib {
         }
         H = H - h - carry;
         
+        if ( MS < 0 ) { MS = 0; }
+        if ( S < 0 ) { S = 0; }
+        if ( M < 0 ) { M = 0; }
+        if ( H < 0 ) { H = 0; }
+                
         String[] b = bufferNums( H, M, S, MS );
         return b[0] + ":" + b[1] + ":" + b[2] + "," + b[3];
     }
