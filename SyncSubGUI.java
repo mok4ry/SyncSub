@@ -16,7 +16,7 @@ class SyncSubGUI implements ActionListener {
     /**
      * Version number
      */
-    private final String version = "v1.0.0";
+    private final String version = "v0.5.1";
 
     /**
      * The currently opened file;
