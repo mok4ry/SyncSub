@@ -88,6 +88,7 @@ class SyncSubGUI implements ActionListener {
         JFrame f = new JFrame( "SyncSub " + version );
         f.setSize( 300, 170 );
         f.setLayout( new BorderLayout() );
+        f.setResizable( false );
 
         f.add( buildTopComponents(), BorderLayout.NORTH );
         f.add( buildBottomComponents(), BorderLayout.SOUTH );
