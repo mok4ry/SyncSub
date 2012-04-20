@@ -118,23 +118,14 @@ class SyncSubGUI implements ActionListener {
         p.setLayout( new GridLayout( 3, 1 ) );
         
         // Three subpanels so that labels stack vertically and are centered.
-        JPanel p1 = new JPanel();
-        p1.setLayout( new FlowLayout( FlowLayout.CENTER ) );
         errorLabel = new JLabel();
-        p1.add( errorLabel );
-        p.add( p1 );
+        p.add( errorLabel );
 
-        JPanel p2 = new JPanel();
-        p2.setLayout( new FlowLayout( FlowLayout.CENTER ) );
         statusLabel = new JLabel();
-        p2.add( statusLabel );
-        p.add( p2 );
+        p.add( statusLabel );
 
-        JPanel p3 = new JPanel();
-        p3.setLayout( new FlowLayout( FlowLayout.CENTER ) );
         fileLabel = new JLabel();
-        p3.add( fileLabel );
-        p.add( p3 );
+        p.add( fileLabel );
 
         return p;
     }
