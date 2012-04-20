@@ -190,9 +190,26 @@ class SyncSubGUI implements ActionListener {
             displayError( "Not a valid file (not .srt): " + f.getName() );
             return;
         }
-        SyncSubLib.update( f, plusOrMinus, Integer.parseInt(t[0]),
-                           Integer.parseInt(t[1]), Integer.parseInt(t[2]),
-                           Integer.parseInt(t[3]) );
+
+        int hours = Integer.parseInt(t[0]);
+        int minutes = Integer.parseInt(t[1]);
+        int seconds = Integer.parseInt(t[2]);
+        int mseconds = Integer.parseInt(t[3]);
+        if ( hours > 99 ) {
+            displayError( "Invalid hours increment: " + t[0] );
+            return;
+        } else if ( minutes > 59 ) {
+            displayError( "Invalid minutes increment: " + t[1] );
+            return;
+        } else if ( seconds > 59 ) {
+            displayError( "Invalid seconds increment: " + t[2] );
+            return;
+        } else if ( mseconds > 999 ) {
+            displayError( "Invalid milliseconds increment: " + t[3] );
+            return;
+        }
+
+        SyncSubLib.update( f, plusOrMinus, hours, minutes, seconds, mseconds );
         statusLabel.setText( SyncSubLib.getNumUpdates() + " start/end times" + 
             "  updated." );
     }
