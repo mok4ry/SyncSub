@@ -7,7 +7,7 @@
 /**
  * Tests for methods in SyncSubLib.java
  */
-class tests extends SyncSubLib {
+class Tests extends SyncSubLib {
 
     // writing my own testing function because JUnit outside of an IDE is hard 
     private static void assertTrue( boolean ex ) {
